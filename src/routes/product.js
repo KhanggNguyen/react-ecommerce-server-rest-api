@@ -1,13 +1,10 @@
 const express = require("express");
 
-const {
-    requireSignin,
-    adminMiddleware,
-    uploadS3,
-} = require("../middleware");
+const { requireSignin, adminMiddleware, uploadS3 } = require("../middleware");
 
 const {
     createProduct,
+    updateProduct,
     getProductsByCategory,
     getProductDetailsById,
     deleteProductById,
@@ -38,13 +35,21 @@ router.post(
     createProduct
 );
 
+router.post(
+    "/product/update",
+    requireSignin,
+    adminMiddleware,
+    uploadS3.array("productPicture"),
+    updateProduct
+);
+
 router.get("/product/", getProducts);
 
-router.get("/products/:categorySlug", getProductsByCategory);
+router.get("/products/:categoryId", getProductsByCategory);
 
 router.get("/product/:productId", getProductDetailsById);
 
-router.delete(
+router.post(
     "/product/deleteProductById",
     requireSignin,
     adminMiddleware,

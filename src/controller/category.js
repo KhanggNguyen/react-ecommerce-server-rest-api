@@ -59,59 +59,29 @@ exports.getCategories = (req, res) => {
     });
 };
 
-exports.updateCategories = async (req, res) => {
-    const { _id, name, parentId, type } = req.body;
-    const updatedCategories = [];
-    if (name instanceof Array) {
-        for (let i = 0; i < name.length; i++) {
-            const category = {
-                name: name[i],
-                type: type[i],
-            };
-            if (parentId[i] !== "") {
-                category.parentId = parentId[i];
-            }
-
-            const updatedCategory = await Category.findOneAndUpdate(
-                { _id: _id[i] },
-                category,
-                { new: true }
-            );
-            updatedCategories.push(updatedCategory);
-        }
-        return res.status(201).json({ updateCategories: updatedCategories });
-    } else {
-        const category = {
-            name,
-            type,
-        };
-        if (parentId !== "") {
-            category.parentId = parentId;
-        }
-        const updatedCategory = await Category.findOneAndUpdate(
-            { _id },
-            category,
-            {
-                new: true,
-            }
-        );
-        return res.status(201).json({ updatedCategory });
+exports.updateCategory= async (req, res) => {
+    const { _id, name, parentId } = req.body;
+    const category = {
+        name,
+    };
+    if (parentId !== "") {
+        category.parentId = parentId;
     }
+    const updatedCategory = await Category.findOneAndUpdate({ _id }, category, {
+        new: true,
+    });
+    return res.status(201).json({ updatedCategory });
 };
 
-exports.deleteCategories = async (req, res) => {
-    const { ids } = req.body.payload;
-    const deletedCategories = [];
-    for (let i = 0; i < ids.length; i++) {
-        const deleteCategory = await Category.findOneAndDelete({
-            _id: ids[i]._id,
-            createdBy: req.user._id,
-        });
-        deletedCategories.push(deleteCategory);
-    }
+exports.deleteCategory = async (req, res) => {
+    const { _id } = req.body.payload;
+    
+    const deleteCategory = await Category.findOneAndDelete({
+        _id
+    });
 
-    if (deletedCategories.length == ids.length) {
-        res.status(201).json({ message: "Categories removed" });
+    if(deleteCategory){
+        res.status(201).json({ message: "Category removed" });
     } else {
         res.status(400).json({ message: "Something went wrong" });
     }

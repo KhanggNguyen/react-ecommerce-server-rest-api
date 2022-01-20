@@ -36,36 +36,56 @@ exports.createProduct = (req, res) => {
     });
 };
 
+exports.updateProduct = async (req, res) => {
+    const { _id, name, price, description, category, quantity } =
+        req.body;
+
+    let productPictures = [];
+
+    if (req.files.length > 0) {
+        productPictures = req.files.map((file) => {
+            return { img: file.location };
+        });
+    }
+
+    const product = {
+        _id,
+        name,
+        price,
+        description,
+        category,
+        quantity,
+        productPictures,
+    };
+
+    const updatedProduct = await Product.findOneAndUpdate({ _id }, product, {
+        new: true,
+    });
+
+    return res.status(201).json({ updatedProduct });
+};
+
 exports.getProductsByCategory = (req, res) => {
-    console.log(req.params);
-    const { categorySlug } = req.params;
-    Category.findOne({ slug: categorySlug })
-        .select("_id type")
+    const { categoryId } = req.params;
+
+    Category.findOne({ _id: categoryId })
+        .select("_id name children slug")
         .exec((error, category) => {
             if (error) {
                 return res.status(400).json({ error });
             }
 
             if (category) {
-                Product.find({ category: category._id }).exec(
-                    (error, products) => {
+                Product.find({ category: category._id })
+                    .populate({ path: "category", select: "_id name" })
+                    .exec((error, products) => {
                         if (error) {
                             return res.status(400).json({ error });
                         }
 
-                        if (category.type) {
-                            if (products.length > 0) {
-                                res.status(200).json({
-                                    products,
-                                });
-                            }
-                        } else {
-                            res.status(200).json({ products });
-                        }
-                    }
-                );
-            }
-            else res.status(400).json({message: "Category not found"});
+                        res.status(200).json({ products });
+                    });
+            } else res.status(400).json({ message: "Category not found" });
         });
 };
 
@@ -85,9 +105,10 @@ exports.getProductDetailsById = (req, res) => {
 
 // new update
 exports.deleteProductById = (req, res) => {
-    const { productId } = req.body;
-    if (productId) {
-        Product.deleteOne({ _id: productId }).exec((error, result) => {
+    const { _id } = req.body.payload;
+    
+    if (_id) {
+        Product.deleteOne({ _id }).exec((error, result) => {
             if (error) return res.status(400).json({ error });
             if (result) {
                 res.status(202).json({ result });

@@ -2,8 +2,8 @@ const express = require("express");
 const {
     addCategory,
     getCategories,
-    updateCategories,
-    deleteCategories,
+    updateCategory,
+    deleteCategory,
 } = require("../controller/category");
 const {
     requireSignin,
@@ -42,14 +42,14 @@ router.post(
     requireSignin,
     adminMiddleware,
     upload.array("categoryImage"),
-    updateCategories
+    updateCategory
 );
 
 router.post(
     "/category/delete",
     requireSignin,
     adminMiddleware,
-    deleteCategories
+    deleteCategory
 );
 
 module.exports = router;
