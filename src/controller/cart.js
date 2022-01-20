@@ -11,6 +11,7 @@ function runUpdate(condition, updateData) {
 }
 
 exports.addItemToCart = (req, res) => {
+    console.log(`Add to cart request for user ${req.user._id}`);
     Cart.findOne({ user: req.user._id }).exec((error, cart) => {
         if (error) return res.status(400).json({ error });
         if (cart) {
@@ -40,14 +41,6 @@ exports.addItemToCart = (req, res) => {
                     };
                 }
                 promiseArray.push(runUpdate(condition, update));
-                //Cart.findOneAndUpdate(condition, update, { new: true }).exec();
-                // .exec((error, _cart) => {
-                //     if(error) return res.status(400).json({ error });
-                //     if(_cart){
-                //         //return res.status(201).json({ cart: _cart });
-                //         updateCount++;
-                //     }
-                // })
             });
             Promise.all(promiseArray)
                 .then((response) => res.status(201).json({ response }))
@@ -77,8 +70,8 @@ exports.getCartItems = (req, res) => {
             if (error) return res.status(400).json({ error });
             if (cart) {
                 let cartItems = {};
-                cart.cartItems.forEach((item, index) => {
-                    cartItems[item.product._id.toString()] = {
+                cart.cartItems.forEach( (item) => {
+                    cartItems[item.product._id] = {
                         _id: item.product._id.toString(),
                         name: item.product.name,
                         img: item.product.productPictures[0].img,
@@ -94,9 +87,9 @@ exports.getCartItems = (req, res) => {
 
 // new update remove cart items
 exports.removeCartItems = (req, res) => {
-    const { productId } = req.body.payload;
+    const { productId } = req.body;
     if (productId) {
-        Cart.update(
+        Cart.updateOne(
             { user: req.user._id },
             {
                 $pull: {

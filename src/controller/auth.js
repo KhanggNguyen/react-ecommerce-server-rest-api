@@ -13,7 +13,7 @@ exports.signup = (req, res) => {
     User.findOne({ email: req.body.email }).exec(async (error, user) => {
         if (user)
             return res.status(400).json({
-                error: "User already registered",
+                message: "Email already registered by another user",
             });
 
         const { firstName, lastName, email, password } = req.body;
@@ -75,5 +75,12 @@ exports.signin = (req, res) => {
             console.error(error);
             return res.status(400).json({ message: "Something went wrong" });
         }
+    });
+};
+
+exports.signout = (req, res) => {
+    res.clearCookie("token");
+    res.status(200).json({
+        message: "Signout successfully...!",
     });
 };

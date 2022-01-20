@@ -7,7 +7,7 @@ exports.signup = (req, res) => {
     User.findOne({ email: req.body.email }).exec((error, user) => {
         if (user)
             return res.status(400).json({
-                message: "Admin already registered",
+                message: "Email already registered by another user",
             });
 
         User.estimatedDocumentCount(async (err, count) => {
