@@ -8,22 +8,15 @@ const addressSchema = new mongoose.Schema({
         min: 3,
         max: 50,
     },
-    mobileNumber: {
+    mobile: {
         type: String,
         required: true,
         trim: true,
     },
-    pinCode: {
+    postalCode: {
         type: String,
         required: true,
         trim: true,
-    },
-    locality: {
-        type: String,
-        required: true,
-        trim: true,
-        min: 10,
-        max: 100,
     },
     address: {
         type: String,
@@ -32,28 +25,19 @@ const addressSchema = new mongoose.Schema({
         min: 10,
         max: 100,
     },
-    cityDistrictTown: {
+    city: {
         type: String,
         required: true,
         trim: true,
     },
-    state: {
+    department: {
         type: String,
         required: true,
-        required: true,
-    },
-    landmark: {
-        type: String,
-        min: 10,
-        max: 100,
-    },
-    alternatePhone: {
-        type: String,
     },
     addressType: {
         type: String,
         required: true,
-        enum: ["home", "work"],
+        enum: ["Home", "Work"],
         required: true,
     },
 });
