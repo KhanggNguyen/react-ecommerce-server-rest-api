@@ -11,6 +11,7 @@ env.config();
 //routes
 const authRoutes = require("./src/routes/auth");
 const adminAuthRoutes = require("./src/routes/admin/auth");
+const adminUserRoutes = require("./src/routes/admin/user");
 const productRoutes = require("./src/routes/product");
 const categoryRoutes = require("./src/routes/category");
 const cartRoutes = require("./src/routes/cart");
@@ -29,6 +30,7 @@ app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", authRoutes);
 app.use("/api", adminAuthRoutes);
+app.use("/api", adminUserRoutes);
 app.use("/api", cartRoutes);
 app.use("/api", addressRoutes);
 app.use("/api", orderRoutes);

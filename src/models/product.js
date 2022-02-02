@@ -43,6 +43,17 @@ const productSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
+        reviews: [
+            {
+                userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                review: String,
+                note: {
+                    type: Number,
+                    min: 1,
+                    max: 5,
+                },
+            },
+        ],
         updatedAt: Date,
     },
     { timestamps: true }

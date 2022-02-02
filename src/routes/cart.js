@@ -3,6 +3,7 @@ const {
     addItemToCart,
     getCartItems,
     removeCartItems,
+    emptyCartItems,
 } = require("../controller/cart");
 
 const { requireSignin, userMiddleware } = require("../middleware");
@@ -25,5 +26,7 @@ router.post(
     userMiddleware,
     removeCartItems
 );
+
+router.post("/user/cart/emptyCartItems", requireSignin, userMiddleware, emptyCartItems);
 
 module.exports = router;
