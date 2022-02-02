@@ -65,8 +65,9 @@ exports.getOrders = (req, res) => {
 exports.getAllOrder = (req, res) => {
     Order.find()
         .sort({'createdAt': 'desc'})
-        .select("_id paymentStatus paymentType orderStatus items")
+        .select("_id paymentStatus paymentType orderStatus items createdAt")
         .populate("items.productId", "_id name productPictures")
+        .populate("user", "_id firstName lastName")
         .exec((error, orders) => {
             if (error) return res.status(400).json({ error });
             if (orders) {

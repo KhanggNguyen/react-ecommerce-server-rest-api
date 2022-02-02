@@ -105,3 +105,16 @@ exports.removeCartItems = (req, res) => {
         });
     }
 };
+
+exports.emptyCartItems = (req, res) => {
+    Cart.deleteOne({ user: req.user._id }).exec((error, result) => {
+        if (error) return res.status(400).json({ error });
+        if (result) {
+            if(result.deletedCount === 1){
+                return res.status(200).json({message: "Cart empty."});
+            }else{
+                return res.status(500).json({message: "Something went wrong. Cannot empty cart items."});
+            }
+        }
+    });
+}

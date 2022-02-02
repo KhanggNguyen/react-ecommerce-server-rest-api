@@ -15,6 +15,7 @@ const multer = require("multer");
 const router = express.Router();
 const shortid = require("shortid");
 const path = require("path");
+const { validateCreateProductRequest, isRequestValidated } = require("../middleware/productValidator");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -31,6 +32,8 @@ router.post(
     "/product/create",
     requireSignin,
     adminMiddleware,
+    validateCreateProductRequest,
+    isRequestValidated,
     uploadS3.array("productPicture"),
     createProduct
 );
@@ -39,6 +42,8 @@ router.post(
     "/product/update",
     requireSignin,
     adminMiddleware,
+    validateCreateProductRequest,
+    isRequestValidated,
     uploadS3.array("productPicture"),
     updateProduct
 );
