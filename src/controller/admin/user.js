@@ -13,18 +13,21 @@ exports.getUsers = (req, res) => {
 exports.updateUser = async (req, res) => {
     if(!req.body._id) return res.status(500).json({error: "Can not find user id"});
     
-    const { _id, firstName, lastName, password, email } = req.body; 
-    const hashPassword = await bcrypt.hash(password, 10);
-
+    const { _id, firstName, lastName, password, email } = req.body;
     const user = {
         _id,
         firstName,
         lastName,
         email,
-        hashPassword
     }
+    if(password){
+        const hashPassword = await bcrypt.hash(password, 10);
+        user.hashPassword = hashPassword;
+    }
+    
 
-    await User.findOneAndUpdate({_id: req.body._id}, user, {new: true}).exec( (error, updatedUser) => {
+
+    User.findOneAndUpdate({_id: req.body._id}, user, {new: true}).exec( (error, updatedUser) => {
         if(error) return res.status(500).json({error});
 
         if(updatedUser) return res.status(201).json(updatedUser);

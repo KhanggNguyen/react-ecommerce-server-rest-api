@@ -32,7 +32,6 @@ router.post(
     "/product/create",
     requireSignin,
     adminMiddleware,
-    validateCreateProductRequest,
     isRequestValidated,
     uploadS3.array("productPicture"),
     createProduct
@@ -42,7 +41,6 @@ router.post(
     "/product/update",
     requireSignin,
     adminMiddleware,
-    validateCreateProductRequest,
     isRequestValidated,
     uploadS3.array("productPicture"),
     updateProduct
@@ -50,7 +48,7 @@ router.post(
 
 router.get("/product/", getProducts);
 
-router.get("/products/:categoryId", getProductsByCategory);
+router.get("/products/:categoryName", getProductsByCategory);
 
 router.get("/product/:productId", getProductDetailsById);
 
