@@ -10,7 +10,7 @@ exports.createProduct = (req, res) => {
         req.body;
 
     let productPictures = [];
-
+    console.log(req.files);
     if (req.files.length > 0) {
         productPictures = req.files.map((file) => {
             return { img: file.location };
@@ -66,9 +66,9 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.getProductsByCategory = (req, res) => {
-    const { categoryId } = req.params;
-
-    Category.findOne({ _id: categoryId })
+    const { categoryName } = req.params;
+    console.log(categoryName);
+    Category.findOne({ slug: categoryName })
         .select("_id name children slug")
         .exec((error, category) => {
             if (error) {
