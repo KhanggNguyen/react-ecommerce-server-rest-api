@@ -48,7 +48,7 @@ router.post(
 
 router.get("/product/", getProducts);
 
-router.get("/products/:categoryName", getProductsByCategory);
+router.get("/products/:categoryId", getProductsByCategory);
 
 router.get("/product/:productId", getProductDetailsById);
 
