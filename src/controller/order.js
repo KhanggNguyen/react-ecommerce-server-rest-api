@@ -52,7 +52,7 @@ exports.updateOrder = async (req, res) => {
 
 exports.getOrders = (req, res) => {
     Order.find({ user: req.user._id })
-        .select("_id paymentStatus paymentType orderStatus items")
+        .sort({createdAt: -1})
         .populate("items.productId", "_id name productPictures")
         .exec((error, orders) => {
             if (error) return res.status(400).json({ error });

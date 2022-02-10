@@ -66,9 +66,9 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.getProductsByCategory = (req, res) => {
-    const { categoryName } = req.params;
-    console.log(categoryName);
-    Category.findOne({ slug: categoryName })
+    const { categoryId } = req.params;
+    console.log(categoryId);
+    Category.findOne({ _id: categoryId })
         .select("_id name children slug")
         .exec((error, category) => {
             if (error) {
