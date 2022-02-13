@@ -37,8 +37,7 @@ exports.createProduct = (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-    const { _id, name, price, description, category, quantity } =
-        req.body;
+    const { _id, name, price, description, category, quantity } = req.body;
 
     let productPictures = [];
 
@@ -106,7 +105,7 @@ exports.getProductDetailsById = (req, res) => {
 // new update
 exports.deleteProductById = (req, res) => {
     const { _id } = req.body.payload;
-    
+
     if (_id) {
         Product.deleteOne({ _id }).exec((error, result) => {
             if (error) return res.status(400).json({ error });
@@ -120,12 +119,29 @@ exports.deleteProductById = (req, res) => {
 };
 
 exports.getProducts = async (req, res) => {
+    let limit = 9999;
+    let offset = 0;
+
+    const count = await Product.count();
+
+    if (req.query.limit) {
+        limit = req.query.limit;
+    }
+
+    if (req.query.offset) {
+        offset = req.query.offset;
+    }
+
     const products = await Product.find()
+        .skip(offset)
+        .limit(limit)
         .select(
             "_id name price quantity slug description productPictures category"
         )
         .populate({ path: "category", select: "_id name" })
         .exec();
 
-    res.status(200).json({ products });
+    if (!products) return res.status(204).json("No products was found.");
+
+    return res.status(200).json({ total: count, products });
 };

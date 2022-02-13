@@ -31,6 +31,8 @@ exports.addOrder = (req, res) => {
             order.save((error, order) => {
                 if (error) return res.status(400).json({ error });
                 if (order) {
+
+                    //Order success
                     res.status(201).json({ order });
                 }
             });

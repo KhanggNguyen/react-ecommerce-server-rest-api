@@ -4,6 +4,8 @@ const address = require("../models/address");
 const UserAddress = require("../models/address");
 
 exports.addAddress = (req, res) => {
+    console.log(`${__dirname} address.js`);
+    console.log("REQUEST : addAddress().");
     //return res.status(200).json({body: req.body})
     console.log(`Request add address by ${req.user._id}`);
     const address = req.body;
@@ -50,7 +52,9 @@ exports.addAddress = (req, res) => {
 };
 
 exports.getAddress = (req, res) => {
-    console.log(`Request get address by ${req.user._id}`);
+    
+    console.log(`${__dirname} address.js`);
+    console.log(`REQUEST : getAddress() by ${req.user._id}`);
 
     UserAddress.findOne({ user: req.user._id }).exec((error, userAddress) => {
         if (error) return res.status(400).json({ error });
