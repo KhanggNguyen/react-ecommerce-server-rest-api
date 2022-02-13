@@ -1,6 +1,8 @@
 const User = require('../models/user');
 
 exports.getUserById = (req, res) => {
+    console.log(`${__dirname} user.js`);
+    console.log("REQUEST : getUserById()");
     if(req.user.role === "user"){
 
         if (!req.user?._id)
