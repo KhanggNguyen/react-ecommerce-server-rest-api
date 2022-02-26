@@ -1,12 +1,12 @@
 const Order = require("../models/order");
 const Cart = require("../models/cart");
 const Address = require("../models/address");
-
+const { asyncHandler } = require("../middleware/asyncHandler");
 exports.addOrder = (req, res) => {
+    console.log(`Request to /api/order/create`);
     Cart.deleteOne({ user: req.user._id }).exec((error, result) => {
         if (error) return res.status(400).json({ error });
         if (result) {
-            console.log(result);
             req.body.user = req.user._id;
             req.body.orderStatus = [
                 {
@@ -31,7 +31,6 @@ exports.addOrder = (req, res) => {
             order.save((error, order) => {
                 if (error) return res.status(400).json({ error });
                 if (order) {
-
                     //Order success
                     res.status(201).json({ order });
                 }
@@ -40,36 +39,11 @@ exports.addOrder = (req, res) => {
     });
 };
 
-exports.updateOrder = async (req, res) => {
-    const updatedOrder = await Order.findOneAndUpdate(
-        { _id: req.body.orderId },
-        {
-            $set: req.body
-        },
-        { new: true }
-    );
-
-    return res.status(201).json({ order: updatedOrder });
-};
-
 exports.getOrders = (req, res) => {
+    console.log(`Request to /api/orders/`);
     Order.find({ user: req.user._id })
-        .sort({createdAt: -1})
+        .sort({ createdAt: -1 })
         .populate("items.productId", "_id name productPictures")
-        .exec((error, orders) => {
-            if (error) return res.status(400).json({ error });
-            if (orders) {
-                res.status(200).json({ orders });
-            }
-        });
-};
-
-exports.getAllOrder = (req, res) => {
-    Order.find()
-        .sort({'createdAt': 'desc'})
-        .select("_id paymentStatus paymentType orderStatus items createdAt")
-        .populate("items.productId", "_id name productPictures")
-        .populate("user", "_id firstName lastName")
         .exec((error, orders) => {
             if (error) return res.status(400).json({ error });
             if (orders) {
@@ -79,6 +53,7 @@ exports.getAllOrder = (req, res) => {
 };
 
 exports.getOrder = (req, res) => {
+    console.log(`Request to /api/admin/order/`);
     Order.findOne({ _id: req.body.orderId })
         .populate("items.productId", "_id name productPictures")
         .lean()
@@ -99,4 +74,12 @@ exports.getOrder = (req, res) => {
                 });
             }
         });
+};
+
+exports.getCustomerOrders = async (req, res) => {
+    const orders = await Order.find({})
+        .populate("items.productId", "name")
+        .populate("user")
+        .exec();
+    res.status(200).json({ orders });
 };
