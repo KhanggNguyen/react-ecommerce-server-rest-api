@@ -73,7 +73,7 @@ exports.getProductsByCategory = (req, res) => {
             if (error) {
                 return res.status(400).json({ error });
             }
-
+            
             if (category) {
                 Product.find({ category: category._id })
                     .populate({ path: "category", select: "_id name" })
