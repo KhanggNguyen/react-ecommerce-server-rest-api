@@ -26,6 +26,7 @@ function createCategories(categories, parentId = null) {
 }
 
 exports.addCategory = (req, res) => {
+    console.log(`Request to /api/admin/category/create`);
     const categoryObj = {
         name: req.body.name,
         slug: `${slugify(req.body.name)}-${shortid.generate()}`,
@@ -50,6 +51,7 @@ exports.addCategory = (req, res) => {
 };
 
 exports.getCategories = (req, res) => {
+    console.log(`Request to /api/category/`);
     Category.find({}).exec((error, categories) => {
         if (error) return res.status(400).json({ error });
         if (categories) {
@@ -60,6 +62,7 @@ exports.getCategories = (req, res) => {
 };
 
 exports.updateCategory= async (req, res) => {
+    console.log(`Request to /api/admin/category/update`);
     const { _id, name, parentId } = req.body;
     const category = {
         name,
@@ -74,6 +77,7 @@ exports.updateCategory= async (req, res) => {
 };
 
 exports.deleteCategory = async (req, res) => {
+    console.log(`Request to /api/admin/category/delete`);
     const { _id } = req.body.payload;
     
     const deleteCategory = await Category.findOneAndDelete({

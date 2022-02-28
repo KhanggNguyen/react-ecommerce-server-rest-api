@@ -53,7 +53,7 @@ exports.getOrders = (req, res) => {
 };
 
 exports.getOrder = (req, res) => {
-    console.log(`Request to /api/admin/order/`);
+    console.log(`Request to /api/order/`);
     Order.findOne({ _id: req.body.orderId })
         .populate("items.productId", "_id name productPictures")
         .lean()
