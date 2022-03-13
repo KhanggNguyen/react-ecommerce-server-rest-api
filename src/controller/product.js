@@ -2,6 +2,7 @@ const Product = require("../models/product");
 const shortid = require("shortid");
 const slugify = require("slugify");
 const Category = require("../models/category");
+const constant = require("../constants")
 
 exports.createProduct = (req, res) => {
     //res.status(200).json( { file: req.files, body: req.body } );
@@ -119,8 +120,10 @@ exports.deleteProductById = (req, res) => {
 };
 
 exports.getProducts = async (req, res) => {
-    let limit = 9999;
-    let offset = 0;
+    console.log("Request to /api/product/")
+
+    let limit = constant.DEFAULT_PRODUCT_LIMIT;
+    let offset = constant.DEFAULT_PRODUCT_OFFSET;
 
     const count = await Product.count();
 

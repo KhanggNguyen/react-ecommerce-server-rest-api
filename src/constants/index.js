@@ -1,0 +1,4 @@
+module.exports = {
+    DEFAULT_PRODUCT_LIMIT: 9999,
+    DEFAULT_PRODUCT_OFFSET: 0,
+}
