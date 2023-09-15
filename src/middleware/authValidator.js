@@ -1,6 +1,6 @@
-const { check, validationResult } = require("express-validator");
+import { check, validationResult } from "express-validator";
 
-exports.validateSignupRequest = [
+export const validateSignupRequest = [
     check("firstName", "firstName is required").notEmpty(),
     check("lastName").notEmpty().withMessage("lastName is required"),
     check("email").isEmail().withMessage("Valid Email is required"),
@@ -9,14 +9,14 @@ exports.validateSignupRequest = [
         .withMessage("Password must be at least 6 character long"),
 ];
 
-exports.validateSigninRequest = [
+export const validateSigninRequest = [
     check("email").isEmail().withMessage("Valid Email is required"),
     check("password")
         .isLength({ min: 6 })
         .withMessage("Password must be at least 6 character long"),
 ];
 
-exports.isRequestValidated = (req, res, next) => {
+export const isRequestValidated = (req, res, next) => {
     const errors = validationResult(req);
     if (errors.array().length > 0) {
         return res.status(400).json({ error: errors.array()[0].msg });

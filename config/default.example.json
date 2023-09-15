@@ -1,0 +1,30 @@
+{
+    "development": {
+        "PORT" : 8000,
+        "MONGODB_URI": "*",
+        "REDIS_URI": "*",
+        "REDIS_PORT": 6379,
+        "JWT_ACCESSTOKEN_SECRET": "*",
+        "JWT_ACCESSTOKEN_EXP": "1h",
+        "JWT_REFRESHTOKEN_SECRET": "*",
+        "JWT_REFRESHTOKEN_EXP": "1d",
+        "google": {
+            "CLIENT_ID": "*",
+            "CLIENT_SECRET": "*"
+        }
+    },
+    "production" : {
+        "PORT": 80,
+        "MONGODB_URI": "*",
+        "REDIS_URI": "*",
+        "REDIS_PORT": 6379,
+        "JWT_ACCESSTOKEN_SECRET": "*",
+        "JWT_ACCESSTOKEN_EXP": "5m",
+        "JWT_REFRESHTOKEN_SECRET": "*",
+        "JWT_REFRESHTOKEN_EXP": "1h",
+        "google": {
+            "CLIENT_ID": "*",
+            "CLIENT_SECRET": "*"
+        }
+    }
+}

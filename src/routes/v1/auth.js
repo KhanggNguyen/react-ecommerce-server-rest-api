@@ -1,5 +1,5 @@
 const express = require("express");
-const { signup, signin, signout } = require("../controller/auth");
+const { signup, signin, signout } = require("../controller/v1/auth");
 const {
     validateSignupRequest,
     isRequestValidated,

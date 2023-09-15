@@ -9,7 +9,7 @@ const {
     getProductDetailsById,
     deleteProductById,
     getProducts,
-} = require("../controller/product");
+} = require("../controller/v2/product");
 
 const multer = require("multer");
 const router = express.Router();

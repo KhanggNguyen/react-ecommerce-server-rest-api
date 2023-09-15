@@ -4,7 +4,7 @@ const {
     getCartItems,
     removeCartItems,
     emptyCartItems,
-} = require("../controller/cart");
+} = require("../controller/v2/cart");
 
 const { requireSignin, userMiddleware } = require("../middleware");
 

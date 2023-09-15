@@ -1,6 +1,6 @@
 const express = require('express');
-const { requireSignin, userMiddleware } = require('../middleware');
-const { addAddress, getAddress } = require('../controller/address');
+const { requireSignin, userMiddleware } = require('../../middleware');
+const { addAddress, getAddress } = require('../controller/v2/address');
 const router = express.Router();
 
 

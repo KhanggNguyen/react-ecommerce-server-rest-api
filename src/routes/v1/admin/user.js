@@ -1,8 +1,8 @@
 const express = require('express');
-const { getUsers, updateUser } = require('../../controller/admin/user');
+const { getUsers, updateUser } = require('../../controller/v1/admin/user');
 const router = express.Router();
 
-const { requireSignin, adminMiddleware } = require('../../middleware');
+const { requireSignin, adminMiddleware } = require('../../../middleware');
 
 router.post("/admin/users", requireSignin, adminMiddleware, getUsers);
 

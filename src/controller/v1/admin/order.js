@@ -1,6 +1,6 @@
-const Order = require("../../models/order");
+const Order = require("../../../models/order");
 
-const { asyncHandler } = require("../../middleware/asyncHandler");
+const { asyncHandler } = require("../../../middleware/asyncHandler");
 
 exports.updateOrder = asyncHandler( (req, res, next) => {
     console.log(req.body);

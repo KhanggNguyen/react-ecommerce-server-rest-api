@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-const address = require("../models/address");
-const UserAddress = require("../models/address");
+const address = require("../../models/address");
+const UserAddress = require("../../models/address");
 
 exports.addAddress = (req, res) => {
     console.log(`${__dirname} address.js`);

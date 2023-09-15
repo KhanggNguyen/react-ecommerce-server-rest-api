@@ -4,7 +4,7 @@ const {
     getCategories,
     updateCategory,
     deleteCategory,
-} = require("../controller/category");
+} = require("../controller/v2/category");
 const {
     requireSignin,
     adminMiddleware,
