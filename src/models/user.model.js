@@ -49,6 +49,7 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
+            select: false,
         },
         passwordConfirm: {
             type: String,
@@ -59,6 +60,7 @@ const userSchema = new mongoose.Schema(
                 },
                 message: "Passwords do not match",
             },
+            select: false,
         },
         resetPasswordToken: { type: String },
         resetPasswordExpires: { type: Date },
@@ -69,8 +71,13 @@ const userSchema = new mongoose.Schema(
         },
         contactNumber: { type: String },
         profilePicture: { type: String },
-        loginAttempts: { type: Number, required: true, default: 0 },
-        lockUntil: { type: Number, default: null },
+        loginAttempts: {
+            type: Number,
+            required: true,
+            default: 0,
+            select: false,
+        },
+        lockUntil: { type: Number, default: null, select: false },
         disabled: {
             type: Boolean,
             default: false,
@@ -109,6 +116,29 @@ userSchema.pre("save", function (next) {
             this.password = hash;
 
             this.passwordConfirm = undefined;
+            next();
+        });
+    });
+});
+
+userSchema.pre("findOneAndUpdate", function (next) {
+    bcrypt.genSalt(12, (err, salt) => {
+        if (err)
+            console.error(
+                "Error while generating salt : " +
+                    JSON.stringify(err, undefined, 2)
+            );
+
+        bcrypt.hash(this._update.password, salt, (err, hash) => {
+            if (err)
+                console.error(
+                    "Error while hasing password : " +
+                        JSON.stringify(err, undefined, 2)
+                );
+
+            this._update.password = hash;
+
+            this._update.passwordConfirm = undefined;
             next();
         });
     });
@@ -170,14 +200,12 @@ userSchema.methods.incLoginAttempts = async function (isMatch) {
     }
     // otherwise we're incrementing
     var updates = { $inc: { loginAttempts: 1 } };
-
     // lock the account if we've reached max attempts and it's not locked already
     if (this.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked) {
         updates.$set = { lockUntil: Date.now() + LOCK_TIME };
     }
     try {
         await this.updateOne(updates);
-
         return { isMatch, reason: reasons.PASSWORD_INCORRECT };
     } catch (error) {
         throw new Error(error);

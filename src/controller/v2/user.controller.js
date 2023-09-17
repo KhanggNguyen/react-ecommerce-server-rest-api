@@ -1,6 +1,9 @@
 import createError from "http-errors";
 import User from "../../models/user.model.js";
-import { userPasswordValidate, userUpdateValidate } from "../../validations/auth.js";
+import {
+    userPasswordValidate,
+    userUpdateValidate,
+} from "../../validations/auth.js";
 
 export const getUser = async (req, res, next) => {
     try {
@@ -52,10 +55,15 @@ export const updatePassword = async (req, res, next) => {
 
         const { oldPassword, password, passwordConfirm } = req.body;
 
-        const user = await User.findOne({ _id: req.user.userId }).select("+password");
-
+        const user = await User.findOne({ _id: req.user.userId }).select([
+            "+password",
+            "+passwordConfirm",
+            "+loginAttempts",
+            "+lockUntil",
+        ]);
+        
         const { isMatch } = await user.authenticate(oldPassword);
-
+        console.log(isMatch)
         if (!isMatch || user.disabled) {
             throw createError.Unauthorized();
         }
