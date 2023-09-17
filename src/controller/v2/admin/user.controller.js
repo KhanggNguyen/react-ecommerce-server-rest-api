@@ -1,6 +1,4 @@
 import User from "../../../models/user.model.js";
-import bcrypt from "bcrypt";
-import { userValidate } from "../../../validations/auth.js";
 
 export const getUsers = async (req, res, next) => {
     try {

@@ -61,9 +61,9 @@ export const updatePassword = async (req, res, next) => {
             "+loginAttempts",
             "+lockUntil",
         ]);
-        
+
         const { isMatch } = await user.authenticate(oldPassword);
-        console.log(isMatch)
+
         if (!isMatch || user.disabled) {
             throw createError.Unauthorized();
         }

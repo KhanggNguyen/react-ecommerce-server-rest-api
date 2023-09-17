@@ -10,7 +10,7 @@ import adminUserRoutes from "./v2/admin/user.routes.js";
 // import productRoutes from "./v1/product"
 // import categoryRoutes from "./v1/category"
 // import cartRoutes from "./v1/cart"
-// import addressRoutes from "./v1/address"
+import addressRoutes from "./v2/address.routes.js";
 // import orderRoutes from "./v1/order"
 // import stripeRoutes from "./v1/stripe"
 
@@ -23,7 +23,7 @@ router.use("/api", adminUserRoutes);
 router.use("/api", userRoutes);
 // router.use("/api", adminOrderRoutes);
 // router.use("/api", cartRoutes);
-// router.use("/api", addressRoutes);
+router.use("/api", addressRoutes);
 // router.use("/api", orderRoutes);
 // router.use("/api", stripeRoutes);
 
