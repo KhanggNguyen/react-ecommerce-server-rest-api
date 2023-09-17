@@ -113,9 +113,9 @@ export const verifyRefreshToken = async (refreshToken) => {
 };
 
 export const ROLES = {
-    Admin: "admin",
-    Member: "member",
-    Manager: "manager",
+    USER: "user",
+    ADMIN: "admin",
+    SUPER_ADMIN: "super-admin",
 };
 
 export const checkRole =
