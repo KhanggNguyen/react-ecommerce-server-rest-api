@@ -1,16 +1,17 @@
-const User = require("../../models/user");
-const bcrypt = require("bcrypt");
+import User from "../../../models/user.model.js";
+import bcrypt from "bcrypt";
 
-exports.getUsers = (req, res) => {
-    
-    User.find({role: "user"}).exec((error, users) => {
-        if(error) return res.status(500).json({error});
+export const getUsers = async (req, res, next) => {
+    try{
+        const users = await User.find({role: "user"});
 
-        if(users) return res.status(200).json({users});
-    });
+        return res.json({ users, message: "success" });
+    }catch(error){
+        next(error);
+    }
 }
 
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
     if(!req.body._id) return res.status(500).json({error: "Can not find user id"});
     
     const { _id, firstName, lastName, password, email } = req.body;

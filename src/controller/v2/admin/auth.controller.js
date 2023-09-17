@@ -1,15 +1,15 @@
 import shortid from "shortid";
 import createError from "http-errors";
 
-import User from "../../models/user.model.js";
-import { userLoginValidate, userValidate } from "../../validations/auth.js";
+import User from "../../../models/user.model.js";
+import { userLoginValidate, userValidate } from "../../../validations/auth.js";
 import {
     signAccessToken,
     signRefreshToken,
     verifyRefreshToken,
-} from "../../middleware/jwt.js";
+} from "../../../middleware/jwt.js";
 
-import client from "../../utils/connectRedis.js";
+import client from "../../../utils/connectRedis.js";
 
 export const signup = async (req, res, next) => {
     try {
@@ -34,6 +34,7 @@ export const signup = async (req, res, next) => {
             email,
             password,
             passwordConfirm,
+            role: "admin",
             userName: shortid.generate(),
         });
 
@@ -51,7 +52,7 @@ export const signup = async (req, res, next) => {
 };
 
 export const signin = async (req, res, next) => {
-    try {
+    try{
         const { email, password } = req.body;
 
         const { error } = userLoginValidate(req.body);
@@ -67,7 +68,7 @@ export const signin = async (req, res, next) => {
 
         const { isMatch } = await user.authenticate(password);
 
-        if (!isMatch || user.disabled) {
+        if (!isMatch || user.disabled || !['admin', 'super-admin'].includes(user.role)) {
             throw createError.Unauthorized();
         }
 
@@ -107,7 +108,7 @@ export const signin = async (req, res, next) => {
         // });
 
         //return res.json({ accessToken, refreshToken });
-    } catch (error) {
+    }catch(error){
         next(error);
     }
 };
@@ -190,3 +191,4 @@ export const signout = async (req, res) => {
         next(err);
     }
 };
+
