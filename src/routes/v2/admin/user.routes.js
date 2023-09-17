@@ -9,6 +9,6 @@ import { verifyJwtToken, role } from "../../../middleware/jwt.js";
 
 router.post("/admin/users", verifyJwtToken, role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN), getUsers);
 
-router.post("/admin/user/update", verifyJwtToken, role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN), updateUser);
+router.put("/admin/user", verifyJwtToken, role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN), updateUser);
 
 export default router;

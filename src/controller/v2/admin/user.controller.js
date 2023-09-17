@@ -14,17 +14,21 @@ export const getUsers = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-        const { _id } = req.body;
-
-        const { error } = userValidate(req.body);
+        const { error } = userUpdateValidate(req.body);
 
         if (error) {
             throw createError(error);
         }
 
-        const updatedUser = await User.findOneAndUpdate({ _id }, req.body, {
-            new: true,
-        });
+        const { _id, email, password, passwordConfirm, ...user } = req.body;
+
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: _id ?? req.user.userId },
+            user,
+            {
+                new: true,
+            }
+        );
 
         return res.json({ user: updatedUser, message: "success" });
     } catch (error) {
