@@ -7,6 +7,8 @@ import createError from "http-errors";
 import env from "dotenv";
 import config from "config";
 
+import { v2 as cloudinary } from "cloudinary";
+
 import("./src/middleware/passportConfig.js");
 import chalk from "chalk";
 import router from "./src/routes/index.router.js";
@@ -42,6 +44,14 @@ app.use((err, req, res, next) => {
         status: err.status || 500,
         message: err.message,
     });
+});
+
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+    secure: true,
 });
 
 app.listen(PORT, (error) => {

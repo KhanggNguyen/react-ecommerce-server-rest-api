@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import { PRODUCT } from "../constants/index.js";
 
 const productSchema = new mongoose.Schema(
     {
@@ -38,6 +39,12 @@ const productSchema = new mongoose.Schema(
             ref: "Category",
             required: true,
         },
+        status: {
+            type: String,
+            enum: PRODUCT.STATUS,
+            required: true,
+            default: "active",
+        },
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -59,4 +66,4 @@ const productSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+export default mongoose.model("Product", productSchema);

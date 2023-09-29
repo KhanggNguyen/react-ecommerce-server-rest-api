@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import { USER } from "../constants/index.js";
 
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCK_TIME = 2 * 60 * 60 * 1000;
@@ -31,7 +32,7 @@ const userSchema = new mongoose.Schema(
         },
         gender: {
             type: String,
-            enum: ["MALE", "FEMALE", "OTHER"],
+            enum: [...USER.GENDER],
             default: "OTHER",
         },
         dateOfBirth: {

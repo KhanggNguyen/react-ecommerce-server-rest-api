@@ -1,5 +1,5 @@
 import Joi from "joi";
-
+import { USER } from '../constants/index.js';
 export const userValidate = (data) => {
     const userSchema = Joi.object({
         firstName: Joi.string().min(3).max(20).required().messages({
@@ -22,7 +22,7 @@ export const userValidate = (data) => {
             "string.max": `"passwordConfirm" should have a maximum length of {40}`,
         }),
         dateOfBirth: Joi.date(),
-        gender: Joi.string().valid("MALE", "FEMALE", "OTHER"),
+        gender: Joi.string().valid(...USER.GENDER),
     });
 
     return userSchema.validate(data);
