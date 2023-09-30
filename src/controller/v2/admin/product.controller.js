@@ -20,13 +20,13 @@ export const createProduct = async (req, res, next) => {
             throw createError(error);
         }
 
-        const categoryObj =
+        const cat =
             category &&
             (await Category.findOne({ _id: category }).select(
                 "_id name children slug"
             ));
 
-        if (!categoryObj) {
+        if (!cat) {
             throw createError.BadRequest("Category Not Found!");
         }
 
@@ -77,13 +77,13 @@ export const updateProduct = async (req, res, next) => {
             throw createError(error);
         }
 
-        const categoryObj =
+        const cat =
             category &&
             (await Category.findOne({ _id: category }).select(
                 "_id name children slug"
             ));
 
-        if (!categoryObj) {
+        if (!cat) {
             throw createError.BadRequest("Category Not Found!");
         }
 

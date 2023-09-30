@@ -1,4 +1,5 @@
 import  mongoose from "mongoose";
+
 const categorySchema = new mongoose.Schema(
     {
         name: {
@@ -20,6 +21,11 @@ const categorySchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: false,
+        }
     },
     { timestamps: true }
 );

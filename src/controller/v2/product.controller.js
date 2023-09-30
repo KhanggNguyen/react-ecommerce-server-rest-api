@@ -40,7 +40,7 @@ export const getProducts = async (req, res, next) => {
 
         if (!products) return res.status(204).json("No products was found.");
 
-        return res.status(200).json({ products });
+        return res.status(200).json({ products, message: "success" });
     } catch (error) {
         next(error);
     }
