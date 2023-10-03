@@ -8,9 +8,9 @@ import {
 
 const router = express.Router();
 
-router.post("/admin/signup",  signup);
-router.post("/admin/signin",  signin);
-router.post("/admin/refresh-token", refreshToken);
-router.post("/admin/signout", signout);
+router.post("/signup",  signup);
+router.post("/signin",  signin);
+router.post("/refresh-token", refreshToken);
+router.post("/signout", signout);
 
 export default router;
