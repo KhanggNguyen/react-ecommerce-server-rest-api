@@ -11,7 +11,7 @@ import adminCategoryRoutes from "./v2/admin/category.routes.js";
 // import adminOrderRoutes from "./v1/admin/order"
 import productRoutes from "./v2/product.routes.js";
 import categoryRoutes from "./v2/category.routes.js"
-// import cartRoutes from "./v1/cart"
+import cartRoutes from "./v2/cart.routes.js"
 import addressRoutes from "./v2/address.routes.js";
 // import orderRoutes from "./v1/order"
 // import stripeRoutes from "./v1/stripe"
@@ -26,7 +26,7 @@ router.use("/api", adminProductRoutes);
 router.use("/api", adminCategoryRoutes);
 router.use("/api", userRoutes);
 // router.use("/api", adminOrderRoutes);
-// router.use("/api", cartRoutes);
+router.use("/api", cartRoutes);
 router.use("/api", addressRoutes);
 // router.use("/api", orderRoutes);
 // router.use("/api", stripeRoutes);

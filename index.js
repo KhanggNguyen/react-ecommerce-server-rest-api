@@ -13,6 +13,7 @@ import("./src/middleware/passportConfig.js");
 import chalk from "chalk";
 import router from "./src/routes/index.router.js";
 import connectDB from "./src/utils/connectDB.js";
+import helmet from "helmet";
 
 //get env variable
 env.config();
@@ -32,7 +33,7 @@ app.use(
         optionSuccessStatus: 200,
     })
 );
-
+app.use(helmet());
 app.use(router);
 
 app.use((req, res, next) => {

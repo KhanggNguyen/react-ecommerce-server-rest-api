@@ -1,5 +1,5 @@
 import Joi from "joi";
-import {PRODUCT} from "../constants/index.js";
+import { PRODUCT } from "../constants/index.js";
 
 export const productValidate = (data) => {
     const productSchema = Joi.object({
@@ -53,8 +53,8 @@ export const productStatusPutValidate = (data) => {
         _id: Joi.string().hex().length(24).required().messages({
             "string.required": `"_id" cannot be an empty field`,
         }),
-        gender: Joi.string().valid(...PRODUCT.STATUS)
+        gender: Joi.string().valid(...PRODUCT.STATUS),
     });
 
     return productSchema.validate(data);
-}
+};
