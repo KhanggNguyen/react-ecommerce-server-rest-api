@@ -11,7 +11,7 @@ import {
 import { role, verifyJwtToken } from "../../../middleware/jwt.js";
 
 router.post(
-    "/category/",
+    "/",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     upload.single("categoryImage"),
@@ -19,7 +19,7 @@ router.post(
 );
 
 router.put(
-    "/category/",
+    "/",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     upload.single("categoryImage"),

@@ -11,14 +11,14 @@ import { verifyJwtToken } from "../../middleware/jwt.js";
 
 const router = express.Router();
 
-router.post("/cart/", verifyJwtToken, addItemToCart);
+router.post("/", verifyJwtToken, addItemToCart);
 
-router.put("/cart/", verifyJwtToken, updateCartItems);
+router.put("/", verifyJwtToken, updateCartItems);
 
-router.get("/cart/", verifyJwtToken, getCartItems);
+router.get("/", verifyJwtToken, getCartItems);
 
-router.delete("/cart/removeItem", verifyJwtToken, removeCartItems);
+router.delete("/removeItem", verifyJwtToken, removeCartItems);
 
-router.delete("/cart/emptyCartItems", verifyJwtToken, emptyCartItems);
+router.delete("/emptyCartItems", verifyJwtToken, emptyCartItems);
 
 export default router;

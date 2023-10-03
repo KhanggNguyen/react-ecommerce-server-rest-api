@@ -8,8 +8,8 @@ import {
 import { verifyJwtToken } from "../../middleware/jwt.js";
 const router = express.Router();
 
-router.post("/address/", verifyJwtToken, addAddress);
-router.get("/address/", verifyJwtToken, getAddress);
-router.put("/address/", verifyJwtToken, updateAddress);
+router.post("/", verifyJwtToken, addAddress);
+router.get("/", verifyJwtToken, getAddress);
+router.put("/", verifyJwtToken, updateAddress);
 
 export default router;

@@ -43,6 +43,24 @@ export const userUpdateValidate = (data) => {
     return userSchema.validate(data);
 };
 
+export const adminUserUpdateValidate = (data) => {
+    const userSchema = Joi.object({
+        _id: Joi.string().hex().length(24).required().messages({
+            "string.required": `"_id" cannot be an empty field`,
+        }),
+        firstName: Joi.string().min(3).max(20).messages({
+            "string.required": `"firstName" cannot be an empty field`,
+        }),
+        lastName: Joi.string().min(3).max(20).messages({
+            "string.required": `"lastName" cannot be an empty field`,
+        }),
+        dateOfBirth: Joi.date(),
+        gender: Joi.string().valid("MALE", "FEMALE", "OTHER"),
+    });
+
+    return userSchema.validate(data);
+};
+
 export const userPasswordValidate = (data) => {
     const userSchema = Joi.object({
         oldPassword: Joi.string().min(8).max(40).required().messages({

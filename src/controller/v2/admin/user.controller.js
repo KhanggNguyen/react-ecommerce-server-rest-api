@@ -1,5 +1,10 @@
 import User from "../../../models/user.model.js";
 
+import {
+    userPasswordValidate,
+    adminUserUpdateValidate,
+} from "../../../validations/auth.js";
+
 export const getUsers = async (req, res, next) => {
     try {
         const users = await User.find({ role: "user" });
@@ -12,7 +17,7 @@ export const getUsers = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-        const { error } = userUpdateValidate(req.body);
+        const { error } = adminUserUpdateValidate(req.body);
 
         if (error) {
             throw createError(error);

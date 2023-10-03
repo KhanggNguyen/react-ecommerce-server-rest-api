@@ -13,7 +13,7 @@ import { role, verifyJwtToken } from "../../../middleware/jwt.js";
 const router = express.Router();
 
 router.post(
-    "/product/",
+    "/",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     upload.array("productPicture"),
@@ -21,7 +21,7 @@ router.post(
 );
 
 router.put(
-    "/product/",
+    "/",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     upload.array("productPicture"),
@@ -29,7 +29,7 @@ router.put(
 );
 
 router.put(
-    "/product/status",
+    "/status",
     verifyJwtToken,
     role.checkRole(role.ROLES.SUPER_ADMIN),
     updateStatusProduct

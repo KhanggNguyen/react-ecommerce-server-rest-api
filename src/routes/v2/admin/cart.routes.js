@@ -12,35 +12,35 @@ import { verifyJwtToken, role } from "../../../middleware/jwt.js";
 const router = express.Router();
 
 router.post(
-    "/cart/",
+    "/",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     addItemToCart
 );
 
 router.put(
-    "/cart/",
+    "/",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     updateCartItems
 );
 
 router.get(
-    "/cart/",
+    "/",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     getCartItems
 );
 
 router.delete(
-    "/cart/removeItem",
+    "/removeItem",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     removeCartItems
 );
 
 router.delete(
-    "/cart/emptyCartItems",
+    "/emptyCartItems",
     verifyJwtToken,
     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
     emptyCartItems

@@ -23,21 +23,21 @@ import addressRoutes from "./v2/address.routes.js";
  * ADMIN
  */
 router.use("/api/admin", adminAuthRoutes);
-router.use("/api/admin", adminUserRoutes);
-router.use("/api/admin", adminProductRoutes);
-router.use("/api/admin", adminCategoryRoutes);
-router.use("/api/admin", adminCartRoutes);
+router.use("/api/admin/category", adminCategoryRoutes);
+router.use("/api/admin/product", adminProductRoutes);
+router.use("/api/admin/user", adminUserRoutes);
+router.use("/api/admin/cart", adminCartRoutes);
 
 /**
  * USER
  */
-router.use("/api", productRoutes);
-router.use("/api", categoryRoutes);
 router.use("/api", authRoutes);
-router.use("/api", userRoutes);
+router.use("/api/category", categoryRoutes);
+router.use("/api/product", productRoutes);
+router.use("/api/user", userRoutes);
+router.use("/api/cart", cartRoutes);
+router.use("/api/address", addressRoutes);
 // router.use("/api", adminOrderRoutes);
-router.use("/api", cartRoutes);
-router.use("/api", addressRoutes);
 // router.use("/api", orderRoutes);
 // router.use("/api", stripeRoutes);
 

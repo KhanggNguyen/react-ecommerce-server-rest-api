@@ -6,9 +6,9 @@ import { getUser, updatePassword, updateUser } from "../../controller/v2/user.co
 
 import { verifyJwtToken } from "../../middleware/jwt.js";
 
-router.post("/user/", verifyJwtToken, getUser);
-router.put("/user/", verifyJwtToken, updateUser);
-router.put("/user/password", verifyJwtToken, updatePassword);
+router.post("/", verifyJwtToken, getUser);
+router.put("/", verifyJwtToken, updateUser);
+router.put("/password", verifyJwtToken, updatePassword);
 
 
 export default router;
