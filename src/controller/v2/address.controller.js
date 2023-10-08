@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import UserAddress from "../../models/address.model.js";
+import { UserAddress } from "../../models/address.model.js";
 
 import {
     addressUpdateValidate,

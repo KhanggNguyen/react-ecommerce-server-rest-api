@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
+import { addressSchema } from "./address.model.js";
 const orderSchema = new mongoose.Schema(
     {
         user: {
@@ -7,11 +7,7 @@ const orderSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
-        addressId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "UserAddress.address",
-            required: true,
-        },
+        address: addressSchema,
         totalAmount: {
             type: Number,
             required: true,
@@ -61,5 +57,5 @@ const orderSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-
-module.exports = mongoose.model("Order", orderSchema);
+mongoose.model("Address", addressSchema);
+export default mongoose.model("Order", orderSchema);

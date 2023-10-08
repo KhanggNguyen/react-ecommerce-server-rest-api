@@ -10,6 +10,7 @@ import {
 } from "../../middleware/jwt.js";
 
 import client from "../../utils/connectRedis.js";
+import { createStripeCustomer } from "../../utils/stripe.js";
 
 export const signup = async (req, res, next) => {
     try {
@@ -28,6 +29,9 @@ export const signup = async (req, res, next) => {
             throw createError(error);
         }
 
+        const userName = [lastName, firstName].join(" ");
+        const customer = await createStripeCustomer({ userName, email });
+
         const _user = new User({
             firstName,
             lastName,
@@ -35,6 +39,7 @@ export const signup = async (req, res, next) => {
             password,
             passwordConfirm,
             userName: shortid.generate(),
+            stripeId: customer.id,
         });
 
         const savedUser = await _user.save();
@@ -79,14 +84,14 @@ export const signin = async (req, res, next) => {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             sameSite: "None",
-            secure: false,
+            secure: true,
             maxAge: 60 * 60 * 1000,
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             sameSite: "None",
-            secure: false,
+            secure: true,
             maxAge: 24 * 60 * 60 * 1000,
         });
 
@@ -114,11 +119,7 @@ export const signin = async (req, res, next) => {
 
 export const refreshToken = async (req, res, next) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-
-        if (!refreshToken) throw createError.BadRequest();
-
-        const { userId } = await verifyRefreshToken(refreshToken);
+        const { userId } = req.user;
 
         const user = await User.findOne({ _id: userId });
         if (!user) {
@@ -126,21 +127,21 @@ export const refreshToken = async (req, res, next) => {
         }
 
         const accessToken = await signAccessToken(userId, user.role);
-        const newRefreshToken = await signRefreshToken(userId);
+        //const newRefreshToken = await signRefreshToken(userId);
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             sameSite: "None",
-            secure: false,
+            secure: true,
             maxAge: 60 * 60 * 1000,
         });
 
-        res.cookie("refreshToken", newRefreshToken, {
-            httpOnly: true,
-            sameSite: "None",
-            secure: false,
-            maxAge: 24 * 60 * 60 * 1000,
-        });
+        // res.cookie("refreshToken", newRefreshToken, {
+        //     httpOnly: true,
+        //     sameSite: "None",
+        //     secure: false,
+        //     maxAge: 24 * 60 * 60 * 1000,
+        // });
 
         // res.cookie("accessToken", accessToken, {
         //     httpOnly: true,
@@ -163,15 +164,9 @@ export const refreshToken = async (req, res, next) => {
     }
 };
 
-export const signout = async (req, res) => {
+export const signout = async (req, res, next) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-
-        if (!refreshToken) {
-            throw createError.BadRequest();
-        }
-
-        const { userId } = await verifyRefreshToken(refreshToken);
+        const { userId } = req.user;
 
         await client.del(userId.toString(), (err, reply) => {
             if (err) {
@@ -179,14 +174,26 @@ export const signout = async (req, res) => {
             }
         });
 
-        res.cookie("accessToken", "", { maxAge: 0 });
-        res.cookie("refreshToken", "", { maxAge: 0 });
+        res.cookie("accessToken", "none", {
+            maxAge: 0,
+            expires: new Date(Date.now() + 5 * 1000),
+            httpOnly: true,
+        });
+        res.cookie("refreshToken", "", {
+            maxAge: 0,
+            expires: new Date(Date.now() + 5 * 1000),
+            httpOnly: true,
+        });
 
         return res.json({
             status: "success",
-            message: "Logout",
+            message: "User logged out successfully",
         });
     } catch (err) {
         next(err);
     }
+};
+
+export const isUserLoggedin = (req, res, next) => {
+    return res.status(200).json({ message: "success" });
 };

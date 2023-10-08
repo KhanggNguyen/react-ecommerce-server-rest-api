@@ -52,7 +52,7 @@ export const signup = async (req, res, next) => {
 };
 
 export const signin = async (req, res, next) => {
-    try{
+    try {
         const { email, password } = req.body;
 
         const { error } = userLoginValidate(req.body);
@@ -68,7 +68,11 @@ export const signin = async (req, res, next) => {
 
         const { isMatch } = await user.authenticate(password);
 
-        if (!isMatch || user.disabled || !['admin', 'super-admin'].includes(user.role)) {
+        if (
+            !isMatch ||
+            user.disabled ||
+            !["admin", "super-admin"].includes(user.role)
+        ) {
             throw createError.Unauthorized();
         }
 
@@ -108,18 +112,14 @@ export const signin = async (req, res, next) => {
         // });
 
         //return res.json({ accessToken, refreshToken });
-    }catch(error){
+    } catch (error) {
         next(error);
     }
 };
 
 export const refreshToken = async (req, res, next) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-
-        if (!refreshToken) throw createError.BadRequest();
-
-        const { userId } = await verifyRefreshToken(refreshToken);
+        const { userId } = req.user;
 
         const user = await User.findOne({ _id: userId });
         if (!user) {
@@ -166,13 +166,7 @@ export const refreshToken = async (req, res, next) => {
 
 export const signout = async (req, res) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-
-        if (!refreshToken) {
-            throw createError.BadRequest();
-        }
-
-        const { userId } = await verifyRefreshToken(refreshToken);
+        const { userId } = req.user;
 
         await client.del(userId.toString(), (err, reply) => {
             if (err) {
@@ -191,4 +185,3 @@ export const signout = async (req, res) => {
         next(err);
     }
 };
-

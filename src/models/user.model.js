@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
             index: true,
             lowercase: true,
         },
+        stripeId: {
+            type: String,
+            required: false,
+        },
         gender: {
             type: String,
             enum: [...USER.GENDER],

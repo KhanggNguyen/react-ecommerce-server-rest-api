@@ -55,4 +55,9 @@ const userAddressSchema = new mongoose.Schema(
 );
 
 mongoose.model("Address", addressSchema);
-export default mongoose.model("UserAddress", userAddressSchema);
+const UserAddress = mongoose.model("UserAddress", userAddressSchema);
+
+export {
+    UserAddress, 
+    addressSchema
+}

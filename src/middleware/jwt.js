@@ -38,7 +38,7 @@ export const signRefreshToken = async (userId) => {
             if (err) reject(err);
 
             await client.set(
-                userId.toString(),
+                payload.userId.toString(),
                 token,
                 { EX: 24 * 60 * 60 * 1000 },
                 (err, reply) => {
@@ -79,38 +79,71 @@ export const verifyJwtToken = async (req, res, next) => {
                 next();
             }
         );
-    } catch (err) {
-        next(err);
+    } catch (error) {
+        next(error);
     }
 };
 
-export const verifyRefreshToken = async (refreshToken) => {
-    return new Promise((resolve, reject) => {
+export const verifyRefreshToken = async (req, res, next) => {
+    try {
+        const refreshToken = req.cookies["refreshToken"];
+
+        if (!refreshToken) throw createError.BadRequest();
+
         jwt.verify(
             refreshToken,
             config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`),
             async (err, payload) => {
-                if (err) return reject(err);
+                if (err) return next(err);
 
                 const tokenFound = await client.get(
                     payload.userId,
                     (err, reply) => {
                         if (err) {
-                            return reject(createError.InternalServerError());
+                            return next(createError.InternalServerError());
                         }
                         return reply;
                     }
                 );
-
+                
                 if (tokenFound === refreshToken) {
-                    return resolve(payload);
+                    req.user = payload;
                 }
-
-                return reject(createError.Unauthorized());
+                next();
             }
         );
-    });
+    } catch (error) {
+        next(error);
+    }
 };
+
+// export const verifyRefreshToken = async (refreshToken) => {
+//     return new Promise((resolve, reject) => {
+//         jwt.verify(
+//             refreshToken,
+//             config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`),
+//             async (err, payload) => {
+//                 if (err) return reject(err);
+
+//                 const tokenFound = await client.get(
+//                     payload.userId,
+//                     (err, reply) => {
+//                         if (err) {
+//                             return reject(createError.InternalServerError());
+//                         }
+//                         return reply;
+//                     }
+//                 );
+
+//                 if (tokenFound === refreshToken) {
+//                     return resolve(payload);
+//                 }
+
+//                 return reject(createError.Unauthorized());
+//             }
+//         );
+//     });
+// };
 
 export const ROLES = {
     USER: "user",

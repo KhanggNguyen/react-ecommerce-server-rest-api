@@ -154,7 +154,7 @@ export const getCartItems = async (req, res, next) => {
             "cartItems.product",
             "_id name price productPictures"
         );
-
+            
         let cartItems = {};
         if (cart) {
             cart.cartItems

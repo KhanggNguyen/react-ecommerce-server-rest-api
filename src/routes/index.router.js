@@ -14,8 +14,8 @@ import productRoutes from "./v2/product.routes.js";
 import categoryRoutes from "./v2/category.routes.js";
 import cartRoutes from "./v2/cart.routes.js";
 import addressRoutes from "./v2/address.routes.js";
-// import orderRoutes from "./v1/order"
-// import stripeRoutes from "./v1/stripe"
+import orderRoutes from "./v2/order.routes.js";
+import stripeRoutes from "./v2/stripe.routes.js";
 
 // router.use("/public", express.static(path.join(__dirname, "uploads")));
 
@@ -27,6 +27,7 @@ router.use("/api/admin/category", adminCategoryRoutes);
 router.use("/api/admin/product", adminProductRoutes);
 router.use("/api/admin/user", adminUserRoutes);
 router.use("/api/admin/cart", adminCartRoutes);
+// router.use("/api", adminOrderRoutes);
 
 /**
  * USER
@@ -37,8 +38,7 @@ router.use("/api/product", productRoutes);
 router.use("/api/user", userRoutes);
 router.use("/api/cart", cartRoutes);
 router.use("/api/address", addressRoutes);
-// router.use("/api", adminOrderRoutes);
-// router.use("/api", orderRoutes);
-// router.use("/api", stripeRoutes);
+router.use("/api/order", orderRoutes);
+router.use("/api/payment", stripeRoutes);
 
 export default router;
