@@ -64,7 +64,7 @@ export const updateAddress = async (req, res, next) => {
 
         if (!updateAddress) throw createError.BadRequest();
 
-        return res.status(201).json({ updatedAddress });
+        return res.status(201).json({ message: "success", elements: updatedAddress });
     } catch (error) {
         if (error.isJoi === true) error.status = 422;
 
@@ -78,9 +78,9 @@ export const getAddress = async (req, res, next) => {
             user: req.user.userId,
         });
         if (userAddress) {
-            return res.status(200).json({ userAddress });
+            return res.status(200).json({ message: "success", elements: userAddress });
         } else {
-            return res.status(204).json({ userAddress: [] });
+            return res.status(204).json({ message: "success", elements: [] });
         }
     } catch (error) {
         next(error);

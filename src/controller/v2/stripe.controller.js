@@ -1,6 +1,7 @@
 import User from "../../models/user.model.js";
+import Cart from "../../models/cart.model.js";
 import createError from "http-errors";
-import { attachMethod, listCustomerPayMethods } from "../../utils/stripe.js";
+import { attachMethod, createPaymentMethod, listCustomerPayMethods } from "../../utils/stripe.js";
 
 export const paymentMethodAttach = async (req, res, next) => {
     const { paymentMethod } = req.body;
@@ -8,7 +9,7 @@ export const paymentMethodAttach = async (req, res, next) => {
     const user = await User.findOne({ _id: req.user.userId });
 
     if (!user) throw createError.BadRequest();
-    
+
     const customerId = user.stripeId;
 
     try {
@@ -79,26 +80,71 @@ export const paymentMethods = async (req, res, next) => {
 };
 
 export const createPayment = async (req, res, next) => {
-    const { paymentMethod, amount, currency } = req.body;
+    const { paymentMethod, selectedAddress } = req.body;
 
-    const user = await User.find({ _id: req.user.userId });
+    const user = await User.findOne({ _id: req.user.userId });
 
-    if (!user) throw createError.BadRequest();
+    const cart = await Cart.findOne({ user: req.user.userId }).populate(
+        "cartItems.product",
+        "_id name price productPictures"
+    );
+
+    if (!user || !cart || (cart && cart.cartItems.length === 0))
+        throw createError.BadRequest();
+
+    const items = cart.cartItems.map((item) => ({
+        productId: item.product._id,
+        purchasedQty: item.quantity,
+        payablePrice: item.product.price,
+    }));
+
+    const totalPrice = items.reduce((total, _item) => {
+        return total + _item.payablePrice * _item.purchasedQty;
+    }, 0);
 
     const customerId = user.stripeId;
 
     try {
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount * 100,
-            currency: currency ?? "EUR",
-            customer: customerId,
-            payment_method: paymentMethod,
-            confirmation_method: "manual", // For 3D Security
-            description: "Buy Product",
+        const paymentIntent = await createPaymentMethod(
+            paymentMethod,
+            customerId,
+            totalPrice
+        );
+
+        const orderStatus = [
+            {
+                type: "ordered",
+                date: new Date(),
+                isCompleted: true,
+            },
+            {
+                type: "packed",
+                isCompleted: false,
+            },
+            {
+                type: "shipped",
+                isCompleted: false,
+            },
+            {
+                type: "delivered",
+                isCompleted: false,
+            },
+        ];
+
+        const _order = new Order({
+            user: user._id,
+            orderStatus,
+            address: selectedAddress._id,
+            totalAmount: totalPrice,
+            paymentStatus: "pending",
+            items,
+            paymentType: "card",
         });
 
+        const order = await _order.save();
+
         /* Add the payment intent record to your datbase if required */
-        return res.json(paymentIntent);
+        return res.json({ message: "success", paymentIntent });
     } catch (error) {
         next(error);
     }
