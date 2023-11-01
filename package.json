@@ -4,6 +4,9 @@
   "type": "module",
   "description": "Back end for ecommerce application",
   "main": "index.js",
+  "engines": {
+    "node": ">=16.14.0"
+  },
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
