@@ -13,7 +13,7 @@ export const addAddress = async (req, res, next) => {
         const { error } = addressValidate(req.body);
 
         if (error) {
-            throw createError(error);
+            throw createError.BadRequest(error);
         }
 
         const address = { _id: new mongoose.Types.ObjectId(), ...req.body };
@@ -41,7 +41,7 @@ export const updateAddress = async (req, res, next) => {
         const { error } = addressUpdateValidate(req.body);
 
         if (error) {
-            throw createError(error);
+            throw createError.BadRequest(error);
         }
 
         const { _id, ...address } = req.body;

@@ -26,7 +26,7 @@ export const signup = async (req, res, next) => {
         const { error } = userValidate(req.body);
 
         if (error) {
-            throw createError(error);
+            throw createError.BadRequest(error);
         }
 
         const userName = [lastName, firstName].join(" ");
@@ -61,7 +61,7 @@ export const signin = async (req, res, next) => {
 
         const { error } = userLoginValidate(req.body);
         if (error) {
-            throw createError(error);
+            throw createError.BadRequest(error);
         }
 
         const user = await User.findOne({ email }).select("+password");
@@ -95,7 +95,7 @@ export const signin = async (req, res, next) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        return res.json({ user, message: "success" });
+        return res.status(200).json({ user, message: "success" });
 
         // res.cookie("accessToken", accessToken, {
         //     httpOnly: true,
@@ -158,7 +158,7 @@ export const refreshToken = async (req, res, next) => {
         // });
 
         //return res.json({ accessToken, refreshToken: newRefreshToken });
-        return res.json({ user, message: "success" });
+        return res.status(200).json({ user, message: "success" });
     } catch (err) {
         next(err);
     }
@@ -185,7 +185,7 @@ export const signout = async (req, res, next) => {
             httpOnly: true,
         });
 
-        return res.json({
+        return res.status(200).json({
             status: "success",
             message: "User logged out successfully",
         });

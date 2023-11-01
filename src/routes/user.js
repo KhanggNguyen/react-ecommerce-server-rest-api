@@ -1,6 +1,0 @@
-const express = require("express");
-const router = express.Router();
-
-const { getUserById } = require('../controller/user');
-
-router.post("/user/getUserbyId", requireSignin, getUserById);
