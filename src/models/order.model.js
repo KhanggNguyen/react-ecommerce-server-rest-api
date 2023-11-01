@@ -38,6 +38,10 @@ const orderSchema = new mongoose.Schema(
             enum: ["cod", "card"],
             required: true,
         },
+        paymentIntent: {
+            type: String,
+            required: true,
+        },
         orderStatus: [
             {
                 type: {

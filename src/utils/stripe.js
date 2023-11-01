@@ -81,3 +81,17 @@ export const createPaymentMethod = async (
         }
     });
 };
+
+export const confirmPaymentIntent = async (paymentIntent, paymentMethod) => {
+    return new Promise( async (resolve,reject) => {
+        try{
+            const intent = await stripe.paymentIntents.confirm(paymentIntent, {
+                payment_method: paymentMethod,
+            });
+            
+            resolve(intent);
+        }catch(error){
+            reject(error);
+        }
+    })
+}

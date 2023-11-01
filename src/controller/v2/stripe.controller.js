@@ -1,7 +1,14 @@
 import User from "../../models/user.model.js";
 import Cart from "../../models/cart.model.js";
+import Order from "../../models/order.model.js";
+import { UserAddress } from "../../models/address.model.js";
 import createError from "http-errors";
-import { attachMethod, createPaymentMethod, listCustomerPayMethods } from "../../utils/stripe.js";
+import {
+    attachMethod,
+    createPaymentMethod,
+    listCustomerPayMethods,
+    confirmPaymentIntent,
+} from "../../utils/stripe.js";
 
 export const paymentMethodAttach = async (req, res, next) => {
     const { paymentMethod } = req.body;
@@ -89,7 +96,19 @@ export const createPayment = async (req, res, next) => {
         "_id name price productPictures"
     );
 
-    if (!user || !cart || (cart && cart.cartItems.length === 0))
+    const userAddresses = await UserAddress.findOne({
+        user: req.user.userId,
+    });
+
+    const address =
+        userAddresses.address.length > 0 &&
+        userAddresses.address.find(
+            (adr) => adr._id.toString() == selectedAddress._id
+        );
+
+    console.log(address);
+
+    if (!user || !cart || !address || (cart && cart.cartItems.length === 0))
         throw createError.BadRequest();
 
     const items = cart.cartItems.map((item) => ({
@@ -134,14 +153,17 @@ export const createPayment = async (req, res, next) => {
         const _order = new Order({
             user: user._id,
             orderStatus,
-            address: selectedAddress._id,
+            address: address,
             totalAmount: totalPrice,
             paymentStatus: "pending",
             items,
+            paymentIntent: paymentIntent.id,
             paymentType: "card",
         });
 
-        const order = await _order.save();
+        await _order.save();
+
+        await Cart.deleteOne({ user: req.user.userId });
 
         /* Add the payment intent record to your datbase if required */
         return res.json({ message: "success", paymentIntent });
@@ -153,14 +175,17 @@ export const createPayment = async (req, res, next) => {
 export const confirmPayment = async (req, res, next) => {
     const { paymentIntent, paymentMethod } = req.body;
     try {
-        const intent = await stripe.paymentIntents.confirm(paymentIntent, {
-            payment_method: paymentMethod,
-        });
+        const intent = await confirmPaymentIntent(paymentIntent, paymentMethod);
+
+        await Order.findOneAndUpdate(
+            { paymentIntent },
+            { paymentStatus: "completed" }
+        );
 
         /* Update the status of the payment to indicate confirmation */
-        return res.status(200).json({ message: "success", intent });
-    } catch (err) {
-        error.message = "Could not confirm payment";
+        return res.status(200).json({ message: "success", paymentIntent: intent });
+    } catch (error) {
+        // error.message = "Could not confirm payment";
         next(error);
     }
 };
