@@ -48,7 +48,7 @@ export const signRefreshToken = async (userId) => {
             await client.set(
                 payload.userId.toString(),
                 token,
-                { EX: 24 * 60 * 60 * 1000 },
+                { EX: 24 * 60 * 60 },
                 (err, reply) => {
                     if (err) {
                         return reject(createError.InternalServerError());
