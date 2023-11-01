@@ -7,6 +7,7 @@ import chalk from "chalk";
 // });
 
 const redisClient = createClient({
+    legacyMode: true,
     url: process.env.URI,
 });
 
