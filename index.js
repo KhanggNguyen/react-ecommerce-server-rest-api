@@ -21,7 +21,7 @@ const nodeEnv = process.env.NODE_ENV;
 
 const app = express();
 
-const PORT = config.get(`${nodeEnv}.PORT`) || 3000;
+const PORT = config.has(`${nodeEnv}.PORT`) ? config.get(`${nodeEnv}.PORT`) : process.env.PORT;
 
 //middleware
 app.use(bodyParser.json());

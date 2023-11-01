@@ -13,9 +13,13 @@ const nodeEnv = process.env.NODE_ENV;
 export const signAccessToken = async (userId, role) => {
     return new Promise((resolve, reject) => {
         const payload = { userId, role };
-        const secret = config.get(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`);
+        const secret = config.has(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`)
+            ? config.get(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`)
+            : process.env.JWT_ACCESSTOKEN_SECRET;
         const options = {
-            expiresIn: config.get(`${nodeEnv}.JWT_ACCESSTOKEN_EXP`),
+            expiresIn: config.has(`${nodeEnv}.JWT_ACCESSTOKEN_EXP`)
+                ? config.get(`${nodeEnv}.JWT_ACCESSTOKEN_EXP`)
+                : process.env.JWT_ACCESSTOKEN_EXP,
         };
 
         jwt.sign(payload, secret, options, (err, token) => {
@@ -28,10 +32,14 @@ export const signAccessToken = async (userId, role) => {
 export const signRefreshToken = async (userId) => {
     return new Promise((resolve, reject) => {
         const payload = { userId };
-        const secret = config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`);
+        const secret = config.has(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`)
+            ? config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`)
+            : process.env.JWT_ACCESSTOKEN_SECRET;
 
         const options = {
-            expiresIn: config.get(`${nodeEnv}.JWT_REFRESHTOKEN_EXP`),
+            expiresIn: config.has(`${nodeEnv}.JWT_REFRESHTOKEN_EXP`)
+                ? config.get(`${nodeEnv}.JWT_REFRESHTOKEN_EXP`)
+                : process.env.JWT_REFRESHTOKEN_EXP,
         };
 
         jwt.sign(payload, secret, options, async (err, token) => {
@@ -66,7 +74,9 @@ export const verifyJwtToken = async (req, res, next) => {
 
         jwt.verify(
             accessToken,
-            config.get(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`),
+            config.has(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`)
+                ? config.get(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`)
+                : process.env.JWT_ACCESSTOKEN_SECRET,
             (err, payload) => {
                 if (err) {
                     if (err.name === "JsonWebTokenError") {
@@ -92,7 +102,9 @@ export const verifyRefreshToken = async (req, res, next) => {
 
         jwt.verify(
             refreshToken,
-            config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`),
+            config.has(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`)
+                ? config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`)
+                : process.env.JWT_REFRESHTOKEN_SECRET,
             async (err, payload) => {
                 if (err) return next(err);
 
@@ -105,7 +117,7 @@ export const verifyRefreshToken = async (req, res, next) => {
                         return reply;
                     }
                 );
-                
+
                 if (tokenFound === refreshToken) {
                     req.user = payload;
                 }

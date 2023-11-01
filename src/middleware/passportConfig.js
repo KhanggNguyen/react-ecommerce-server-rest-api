@@ -9,7 +9,9 @@ const JwtStrategy = passportJwt.Strategy;
 const ExtractJwt = passportJwt.ExtractJwt;
 
 const User = mongoose.model("User");
-const secret = config.get(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`);
+const secret = config.has(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`)
+    ? config.get(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`)
+    : process.env.JWT_ACCESSTOKEN_SECRET;
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
