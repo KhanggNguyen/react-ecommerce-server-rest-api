@@ -1,9 +1,17 @@
 import { createClient } from "redis";
 import chalk from "chalk";
 
+// const redisClient = createClient({
+//     port: process.env.PORT,
+//     host: process.env.REDIS_URI,
+// });
+
 const redisClient = createClient({
-    port: process.env.PORT,
-    host: process.env.REDIS_URI,
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_URI,
+        port: process.env.PORT
+    }
 });
 
 const connectRedis = async () => {
