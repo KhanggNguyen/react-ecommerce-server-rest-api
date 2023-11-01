@@ -8,7 +8,7 @@ import chalk from "chalk";
 
 const redisClient = createClient({
     legacyMode: true,
-    url: process.env.URI,
+    url: process.env.REDIS_URI,
 });
 
 const connectRedis = async () => {
