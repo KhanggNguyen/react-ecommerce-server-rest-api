@@ -1,43 +1,69 @@
-const express = require("express");
-const app = express();
-const env = require("dotenv");
-const mongoose = require("mongoose");
-const path = require("path");
-const cors = require("cors");
+import express from "express";
+import path from "path";
+import cors from "cors";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import createError from "http-errors";
+import env from "dotenv";
+import config from "config";
+
+import { v2 as cloudinary } from "cloudinary";
+
+import("./src/middleware/passportConfig.js");
+import chalk from "chalk";
+import router from "./src/routes/index.router.js";
+import connectDB from "./src/utils/connectDB.js";
+import helmet from "helmet";
 
 //get env variable
 env.config();
+const nodeEnv = process.env.NODE_ENV;
 
-//routes
-const authRoutes = require("./src/routes/auth");
-const adminAuthRoutes = require("./src/routes/admin/auth");
-const adminUserRoutes = require("./src/routes/admin/user");
-const adminOrderRoutes = require("./src/routes/admin/order");
-const productRoutes = require("./src/routes/product");
-const categoryRoutes = require("./src/routes/category");
-const cartRoutes = require("./src/routes/cart");
-const addressRoutes = require("./src/routes/address");
-const orderRoutes = require("./src/routes/order");
-const stripeRoutes = require("./src/routes/stripe");
+const app = express();
 
-//MONGO DB CONNEXION
-require("./src/models/db");
+const PORT = config.get(`${nodeEnv}.PORT`) || 3000;
 
 //middleware
-app.use(cors());
-app.use(express.json());
-app.use("/public", express.static(path.join(__dirname, "uploads")));
-app.use("/api", productRoutes);
-app.use("/api", categoryRoutes);
-app.use("/api", authRoutes);
-app.use("/api", adminAuthRoutes);
-app.use("/api", adminUserRoutes);
-app.use("/api", adminOrderRoutes);
-app.use("/api", cartRoutes);
-app.use("/api", addressRoutes);
-app.use("/api", orderRoutes);
-app.use("/api", stripeRoutes);
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(
+    cors({
+        origin: true,
+        credentials: true, //access-control-allow-credentials:true
+        optionSuccessStatus: 200,
+    })
+);
+app.use(helmet());
+app.use(router);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+app.use((req, res, next) => {
+    next(createError.NotFound("This route does not exists."));
+});
+
+app.use((err, req, res, next) => {
+    res.json({
+        status: err.status || 500,
+        message: err.message,
+    });
+});
+
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+    secure: true,
+});
+
+app.listen(PORT, (error) => {
+    try {
+        connectDB();
+        console.log(
+            `${chalk.blue("Starting server on port ")} ${PORT} ${chalk.green(
+                "✓"
+            )}`
+        );
+    } catch (err) {
+        console.error("Error while starting", err);
+    }
 });
