@@ -7,11 +7,7 @@ import chalk from "chalk";
 // });
 
 const redisClient = createClient({
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_URI,
-        port: process.env.PORT
-    }
+    url: process.env.URI,
 });
 
 const connectRedis = async () => {
@@ -26,7 +22,11 @@ const connectRedis = async () => {
 connectRedis();
 
 redisClient.on("connect", () =>
-    console.log(`${chalk.blue("Redis client connected successfully")} ${chalk.green("✓")}`)
+    console.log(
+        `${chalk.blue("Redis client connected successfully")} ${chalk.green(
+            "✓"
+        )}`
+    )
 );
 
 redisClient.on("error", (err) => console.error(err));
