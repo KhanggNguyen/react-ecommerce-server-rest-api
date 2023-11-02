@@ -34,7 +34,7 @@ export const signRefreshToken = async (userId) => {
         const payload = { userId };
         const secret = config.has(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`)
             ? config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`)
-            : process.env.JWT_ACCESSTOKEN_SECRET;
+            : process.env.JWT_REFRESHTOKEN_SECRET;
 
         const options = {
             expiresIn: config.has(`${nodeEnv}.JWT_REFRESHTOKEN_EXP`)
@@ -106,7 +106,6 @@ export const verifyRefreshToken = async (req, res, next) => {
                 ? config.get(`${nodeEnv}.JWT_REFRESHTOKEN_SECRET`)
                 : process.env.JWT_REFRESHTOKEN_SECRET,
             async (err, payload) => {
-                console.log(payload)
                 if (err) return next(err);
                 const tokenFound = await client.get(
                     payload.userId,
