@@ -107,7 +107,7 @@ export const verifyRefreshToken = async (req, res, next) => {
                 : process.env.JWT_REFRESHTOKEN_SECRET,
             async (err, payload) => {
                 if (err) return next(err);
-
+                console.log(payload)
                 const tokenFound = await client.get(
                     payload.userId,
                     (err, reply) => {
