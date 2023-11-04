@@ -25,8 +25,8 @@ function createCategories(categories, parentId = null) {
 
 export const getCategories = async (req, res, next) => {
     try {
-        const categories = await Category.find({});
-        
+        const categories = await Category.find({ isActive: true });
+
         const categoriesOrdered = createCategories(categories);
 
         return res.json({

@@ -168,6 +168,7 @@ export const getCartItems = async (req, res, next) => {
                         qty: item.quantity,
                     };
                 });
+                console.log(cartItems)
         }
         return res.status(200).json({ message: "success", cartItems });
     } catch (error) {

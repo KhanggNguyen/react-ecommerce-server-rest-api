@@ -5,6 +5,7 @@ import { upload } from "../../../utils/multerConfig.js";
 
 import {
     addCategory,
+    deleteCategory,
     updateCategory
 } from "../../../controller/v2/admin/category.controller.js";
 
@@ -26,11 +27,11 @@ router.put(
     updateCategory
 );
 
-// router.post(
-//     "/admin/category/delete",
-//     verifyJwtToken,
-//     role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
-//     deleteCategory
-// );
+router.delete(
+    "/",
+    verifyJwtToken,
+    role.checkRole(role.ROLES.ADMIN, role.ROLES.SUPER_ADMIN),
+    deleteCategory
+);
 
 export default router;

@@ -96,22 +96,6 @@ export const signin = async (req, res, next) => {
         });
 
         return res.status(200).json({ user, message: "success" });
-
-        // res.cookie("accessToken", accessToken, {
-        //     httpOnly: true,
-        //     sameSite: "None",
-        //     secure: true,
-        //     maxAge: 60 * 60 * 1000,
-        // });
-
-        // res.cookie("refreshToken", refreshToken, {
-        //     httpOnly: true,
-        //     sameSite: "None",
-        //     secure: true,
-        //     maxAge: 24 * 60 * 60 * 1000,
-        // });
-
-        //return res.json({ accessToken, refreshToken });
     } catch (error) {
         next(error);
     }
@@ -143,21 +127,6 @@ export const refreshToken = async (req, res, next) => {
         //     maxAge: 24 * 60 * 60 * 1000,
         // });
 
-        // res.cookie("accessToken", accessToken, {
-        //     httpOnly: true,
-        //     sameSite: "None",
-        //     secure: true,
-        //     maxAge: 60 * 60 * 1000,
-        // });
-
-        // res.cookie("refreshToken", newRefreshToken, {
-        //     httpOnly: true,
-        //     sameSite: "None",
-        //     secure: true,
-        //     maxAge: 24 * 60 * 60 * 1000,
-        // });
-
-        //return res.json({ accessToken, refreshToken: newRefreshToken });
         return res.status(200).json({ user, message: "success" });
     } catch (err) {
         next(err);

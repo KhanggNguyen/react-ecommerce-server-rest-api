@@ -17,28 +17,44 @@ export const addCategory = async (req, res, next) => {
             throw createError(error);
         }
 
-        const categoryObj = {
-            name: req.body.name,
-            slug: `${slugify(req.body.name)}-${shortid.generate()}`,
-            createdBy: req.user.userId,
-        };
+        const updatedCategory = await Category.findOneAndUpdate(
+            { name: req.body.name },
+            { isActive: true },
+            {
+                upsert: true,
+                new: true,
+            }
+        );
 
-        if (req.file) {
-            const newUrl = await uploadImage(req.file.path);
-            categoryObj.categoryImage = newUrl;
+        if (!category) {
+            const categoryObj = {
+                name: req.body.name,
+                slug: `${slugify(req.body.name)}-${shortid.generate()}`,
+                createdBy: req.user.userId,
+            };
+
+            if (req.file) {
+                const newUrl = await uploadImage(req.file.path);
+                categoryObj.categoryImage = newUrl;
+            }
+
+            if (req.body.parentId) {
+                categoryObj.parentId = req.body.parentId;
+            }
+
+            const _category = new Category(categoryObj);
+
+            const savedCategory = await _category.save();
+
+            return res.json({
+                status: "success",
+                elements: savedCategory,
+            });
         }
-
-        if (req.body.parentId) {
-            categoryObj.parentId = req.body.parentId;
-        }
-
-        const _category = new Category(categoryObj);
-
-        const savedCategory = await _category.save();
 
         return res.json({
             status: "success",
-            elements: savedCategory,
+            elements: updatedCategory,
         });
     } catch (error) {
         next(error);
@@ -85,17 +101,27 @@ export const updateCategory = async (req, res, next) => {
     }
 };
 
-// export const deleteCategory = async (req, res) => {
-//     console.log(`Request to /api/admin/category/delete`);
-//     const { _id } = req.body.payload;
+export const deleteCategory = async (req, res) => {
+    const { _id } = req.body;
+    try {
+        const updatedCategory = await Category.findOneAndUpdate(
+            {
+                _id,
+            },
+            { isActive: false },
+            {
+                upsert: true,
+                new: true,
+            }
+        );
 
-//     const deleteCategory = await Category.findOneAndDelete({
-//         _id,
-//     });
-
-//     if (deleteCategory) {
-//         res.status(201).json({ message: "Category removed" });
-//     } else {
-//         res.status(400).json({ message: "Something went wrong" });
-//     }
-// };
+        if (updatedCategory) {
+            return res.status(201).json({
+                message: "Category desactivated",
+                category: updatedCategory,
+            });
+        }
+    } catch (error) {
+        next(error);
+    }
+};

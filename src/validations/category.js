@@ -19,6 +19,7 @@ export const categoryPutValidate = (data) => {
         name: Joi.string().trim().required().messages({
             "string.required": `"name" cannot be an empty field`,
         }),
+        parentId: Joi.string().hex().length(24),
     });
 
     return categorySchema.validate(data);

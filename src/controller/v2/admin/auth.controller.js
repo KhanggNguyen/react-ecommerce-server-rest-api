@@ -84,34 +84,18 @@ export const signin = async (req, res, next) => {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             sameSite: "None",
-            secure: false,
+            secure: true,
             maxAge: 60 * 60 * 1000,
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             sameSite: "None",
-            secure: false,
+            secure: true,
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        return res.json({ user, message: "success" });
-
-        // res.cookie("accessToken", accessToken, {
-        //     httpOnly: true,
-        //     sameSite: "None",
-        //     secure: true,
-        //     maxAge: 60 * 60 * 1000,
-        // });
-
-        // res.cookie("refreshToken", refreshToken, {
-        //     httpOnly: true,
-        //     sameSite: "None",
-        //     secure: true,
-        //     maxAge: 24 * 60 * 60 * 1000,
-        // });
-
-        //return res.json({ accessToken, refreshToken });
+        return res.status(200).json({ user, message: "success" });
     } catch (error) {
         next(error);
     }
@@ -127,7 +111,7 @@ export const refreshToken = async (req, res, next) => {
         }
 
         const accessToken = await signAccessToken(userId, user.role);
-        const newRefreshToken = await signRefreshToken(userId);
+        // const newRefreshToken = await signRefreshToken(userId);
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
@@ -136,28 +120,13 @@ export const refreshToken = async (req, res, next) => {
             maxAge: 60 * 60 * 1000,
         });
 
-        res.cookie("refreshToken", newRefreshToken, {
-            httpOnly: true,
-            sameSite: "None",
-            secure: false,
-            maxAge: 24 * 60 * 60 * 1000,
-        });
-
-        // res.cookie("accessToken", accessToken, {
-        //     httpOnly: true,
-        //     sameSite: "None",
-        //     secure: true,
-        //     maxAge: 60 * 60 * 1000,
-        // });
-
         // res.cookie("refreshToken", newRefreshToken, {
         //     httpOnly: true,
         //     sameSite: "None",
-        //     secure: true,
+        //     secure: false,
         //     maxAge: 24 * 60 * 60 * 1000,
         // });
 
-        //return res.json({ accessToken, refreshToken: newRefreshToken });
         return res.json({ user, message: "success" });
     } catch (err) {
         next(err);
@@ -174,12 +143,20 @@ export const signout = async (req, res) => {
             }
         });
 
-        res.cookie("accessToken", "", { maxAge: 0 });
-        res.cookie("refreshToken", "", { maxAge: 0 });
+        res.cookie("accessToken", "none", {
+            maxAge: 0,
+            expires: new Date(Date.now() + 5 * 1000),
+            httpOnly: true,
+        });
+        res.cookie("refreshToken", "", {
+            maxAge: 0,
+            expires: new Date(Date.now() + 5 * 1000),
+            httpOnly: true,
+        });
 
-        return res.json({
+        return res.status(200).json({
             status: "success",
-            message: "Logout",
+            message: "User logged out successfully",
         });
     } catch (err) {
         next(err);

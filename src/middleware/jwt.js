@@ -71,7 +71,7 @@ export const verifyJwtToken = async (req, res, next) => {
         // const accessToken = authHeader.split(" ")[1];
 
         const accessToken = req.cookies["accessToken"];
-
+        console.log(req.cookies)
         jwt.verify(
             accessToken,
             config.has(`${nodeEnv}.JWT_ACCESSTOKEN_SECRET`)

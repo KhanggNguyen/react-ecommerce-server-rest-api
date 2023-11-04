@@ -14,6 +14,6 @@ router.post("/signup",  signup);
 router.post("/signin",  signin);
 router.post("/refresh-token", verifyRefreshToken, refreshToken);
 router.post("/signout", verifyRefreshToken, signout);
-router.post("/isUserLoggedIn", verifyJwtToken, verifyRefreshToken, isUserLoggedin)
+router.post("/isUserLoggedIn", verifyJwtToken, isUserLoggedin)
 
 export default router;
