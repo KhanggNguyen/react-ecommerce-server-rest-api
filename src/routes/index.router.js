@@ -9,7 +9,7 @@ import adminUserRoutes from "./v2/admin/user.routes.js";
 import adminProductRoutes from "./v2/admin/product.routes.js";
 import adminCategoryRoutes from "./v2/admin/category.routes.js";
 import adminCartRoutes from "./v2/admin/cart.routes.js";
-// import adminOrderRoutes from "./v1/admin/order"
+import adminOrderRoutes from "./v2/admin/order.routes.js";
 import productRoutes from "./v2/product.routes.js";
 import categoryRoutes from "./v2/category.routes.js";
 import cartRoutes from "./v2/cart.routes.js";
@@ -27,7 +27,7 @@ router.use("/api/admin/category", adminCategoryRoutes);
 router.use("/api/admin/product", adminProductRoutes);
 router.use("/api/admin/user", adminUserRoutes);
 router.use("/api/admin/cart", adminCartRoutes);
-// router.use("/api", adminOrderRoutes);
+router.use("/api/admin/order", adminOrderRoutes);
 
 /**
  * USER
