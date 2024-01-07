@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(
     cors({
-        origin: ['https://ecommerce-34.netlify.app', 'http://localhost:3000', 'http://localhost:4000'],
+        origin: ['https://ecommerce-34.netlify.app', 'https://ecommerce-admin-34.netlify.app/', 'http://localhost:3000', 'http://localhost:4000'],
         credentials: true, //access-control-allow-credentials:true
         optionSuccessStatus: 200,
     })
