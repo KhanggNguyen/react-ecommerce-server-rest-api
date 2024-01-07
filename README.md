@@ -1,3 +1,3 @@
 # An simple ecommerce APIs 
 
-## deployed on https://node-ecommerce34.herokuapp.com/
+## deployed on https://react-rest-ecommerce.onrender.com
