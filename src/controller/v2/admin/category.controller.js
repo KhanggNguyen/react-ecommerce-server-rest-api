@@ -17,16 +17,19 @@ export const addCategory = async (req, res, next) => {
             throw createError(error);
         }
 
-        const updatedCategory = await Category.findOneAndUpdate(
-            { name: req.body.name },
-            { isActive: true },
-            {
-                upsert: true,
-                new: true,
-            }
-        );
+        // const updatedCategory = await Category.findOneAndUpdate(
+        //     {
+        //         name: req.body.name,
+        //         slug: `${slugify(req.body.name)}-${shortid.generate()}`,
+        //     },
+        //     { isActive: true },
+        //     {
+        //         upsert: true,
+        //         new: true,
+        //     }
+        // );
 
-        if (!category) {
+        // if (!updatedCategory) {
             const categoryObj = {
                 name: req.body.name,
                 slug: `${slugify(req.body.name)}-${shortid.generate()}`,
@@ -50,12 +53,12 @@ export const addCategory = async (req, res, next) => {
                 status: "success",
                 elements: savedCategory,
             });
-        }
+        // }
 
-        return res.json({
-            status: "success",
-            elements: updatedCategory,
-        });
+        // return res.json({
+        //     status: "success",
+        //     elements: updatedCategory,
+        // });
     } catch (error) {
         next(error);
     }
